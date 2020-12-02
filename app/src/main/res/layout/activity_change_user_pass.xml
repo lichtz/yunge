@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.ChangeUserPass">
+    <FrameLayout
+        android:background="@color/mainstart"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="修改密码"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/back"
+            android:layout_marginStart="6dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_arrow_left_s_line"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:src="@drawable/ic_lock_2_line"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_marginStart="8dp"
+            android:id="@+id/userAccount"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@null"
+            android:hint="请输入原密码"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <View
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <LinearLayout
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:src="@drawable/ic_lock_2_line"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@null"
+            android:hint="请设置新的登录密码（6~8位）"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <View
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:src="@drawable/ic_lock_2_line"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@null"
+            android:hint="请重复输入新的登录密码"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+    <View
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="#eeeeee"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <Button
+        android:id="@+id/login"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="52dp"
+        android:text="确认修改"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+
+</LinearLayout>

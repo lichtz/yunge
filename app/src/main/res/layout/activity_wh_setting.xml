@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.WhSettingActivity">
+    <FrameLayout
+        android:background="@color/mainstart"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:gravity="center"
+            android:text="外呼设置"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/back"
+            android:layout_marginStart="6dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_arrow_left_s_line"
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+    </FrameLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_dual_sim_1_line" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/mainstart" />
+
+                <EditText
+                    android:id="@+id/sim1Num"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:focusableInTouchMode="true"
+                    android:hint="SIM1"
+                    android:inputType="phone"
+                    android:paddingStart="4dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/mainstart" />
+
+                <com.qmuiteam.qmui.layout.QMUIButton
+                    android:id="@+id/edit1"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/edit_btn_shape"
+                    android:text="编辑"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/ic_dual_sim_2_line" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/mainstart" />
+
+                <EditText
+                    android:id="@+id/sim2Num"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:hint="SIM2"
+                    android:focusableInTouchMode="true"
+                    android:inputType="phone"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/mainstart" />
+
+                <com.qmuiteam.qmui.layout.QMUIButton
+                    android:id="@+id/edit2"
+                    android:layout_width="90dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/edit_btn_shape"
+                    android:text="编辑"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+
+            </LinearLayout>
+
+
+
+
+            <RadioGroup
+                android:layout_marginTop="8dp"
+                android:id="@+id/selectSim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/selectSimRbtn1"
+                    android:layout_width="85dp"
+                    android:layout_height="44dp"
+                    android:text="SIM1"
+                    android:textColor="@color/black"
+                    android:textSize="13sp">
+
+                </com.google.android.material.radiobutton.MaterialRadioButton>
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/selectSimRbtn2"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:text="SIM2"
+                    android:textColor="@color/black"
+                    android:textSize="13sp">
+
+                </com.google.android.material.radiobutton.MaterialRadioButton>
+
+            </RadioGroup>
+            <!--        <include layout="@layout/order_op_item"/>-->
+            <RadioGroup
+                android:visibility="gone"
+                android:id="@+id/selectYys"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/selectYysYd"
+                    android:layout_width="85dp"
+                    android:layout_height="44dp"
+                    android:text="移动"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/selectYysLt"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:text="联通"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/selectYysLdx"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:text="电信"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+
+            </RadioGroup>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginStart="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_earth_line"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
+
+                <TextView
+                    android:layout_marginStart="30dp"
+                    android:id="@+id/numsView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:text="呼转"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/hzSwitchBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:checked="true" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginStart="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_time_line"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="30dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:text="呼转等待时间"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+
+                <EditText
+                    android:id="@+id/waitTime"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="15dp"
+                    android:background="@null"
+                    android:inputType="phone"
+                    android:paddingStart="4dp"
+                    android:singleLine="true"
+                    android:text="4"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="18sp"
+                    android:text="s" />
+            </FrameLayout>
+
+
+
+            <include
+                layout="@layout/auto_op_item"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/autoClearFm"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_shape"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginStart="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_eraser_line"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
+
+                <TextView
+                    android:layout_marginStart="30dp"
+                    android:text="清除绑定"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:typeface="normal" />
+
+
+            </FrameLayout>
+
+
+
+
+        </LinearLayout>
+</LinearLayout>

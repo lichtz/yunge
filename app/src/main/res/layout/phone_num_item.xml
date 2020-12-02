@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="horizontal"
+    android:background="@drawable/btn_shape"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="44dp">
+    <EditText
+        android:paddingLeft="4dp"
+        android:singleLine="true"
+        android:typeface="normal"
+        android:background="@null"
+        android:id="@+id/numsView"
+        android:textSize="13sp"
+        android:textColor="@color/black"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"/>
+
+    <com.qmuiteam.qmui.layout.QMUIButton
+        android:background="@drawable/btn_shape"
+        android:textSize="13sp"
+        android:text="编辑"
+        android:textColor="@color/black"
+        android:layout_width="90dp"
+        android:layout_height="match_parent"/>
+
+
+
+</LinearLayout>

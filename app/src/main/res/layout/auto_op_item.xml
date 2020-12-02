@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:background="@drawable/btn_shape"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:paddingLeft="4dp"
+        android:paddingBottom="8dp"
+        android:textColor="#666666"
+        android:textSize="13sp"
+        android:text="Tips:自动拨号将使用系统默认通话的SIM卡"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <FrameLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+    <TextView
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:text="自动拨号"
+        android:singleLine="true"
+        android:typeface="normal"
+        android:background="@null"
+        android:id="@+id/numsView"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:inputType="phone"
+        android:layout_height="match_parent"/>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchBtn"
+            android:checked="true"
+            android:layout_gravity="end|center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+
+</LinearLayout>
