@@ -3,22 +3,25 @@ package com.yunge.im
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.fastjson.JSON
-import com.qmuiteam.qmui.layout.QMUIButton
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
+import com.yunge.im.activity.PdfActivity
 import com.yunge.im.interfaces.ILoginResult
 import com.yunge.im.mode.UserBean
 import com.yunge.im.util.SharePreferenceUtils
 import com.yunge.im.util.UserUtil
+
 
 class UserLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,27 +34,36 @@ class UserLoginActivity : AppCompatActivity() {
 
                 val userBean =
                     JSON.parseObject(userStr, UserBean::class.java)
-                if (!TextUtils.isEmpty(userBean.loginAccount )){
-                    UserUtil.login(this,userBean.loginAccount, userBean.loginPass,object :ILoginResult{
-                        override fun result(userBean: UserBean?, errorTip: String?) {
-                            if (userBean == null) {
-                                runOnUiThread{
-                                    showView();
+                if (!TextUtils.isEmpty(userBean.loginAccount)){
+                    UserUtil.login(
+                        this,
+                        userBean.loginAccount,
+                        userBean.loginPass,
+                        object : ILoginResult {
+                            override fun result(userBean: UserBean?, errorTip: String?) {
+                                if (userBean == null) {
+                                    runOnUiThread {
+                                        showView();
 
+                                    }
+
+                                } else {
+                                    startActivity(
+                                        Intent(
+                                            this@UserLoginActivity,
+                                            SettingActivity::class.java
+                                        )
+                                    )
+                                    finish()
                                 }
-
-                            }else{
-                                startActivity(Intent(this@UserLoginActivity, SettingActivity::class.java))
-                                finish()
                             }
-                        }
-                    })
+                        })
                     return
 
                 }
 
             }
-        }catch (e:Exception){
+        }catch (e: Exception){
 
         }
 
@@ -64,14 +76,51 @@ class UserLoginActivity : AppCompatActivity() {
         showView()
     }
 
+    private var isAccecpt:Boolean = false;
     private fun showView() {
         setContentView(R.layout.activity_user_login)
         val account = findViewById<EditText>(R.id.userAccount)
         val pass = findViewById<EditText>(R.id.passInput)
         val loginBtn = findViewById<Button>(R.id.login)
+        val xuke = findViewById<TextView>(R.id.listce)
+        val content = "我已阅读并同意隐私政策和保密协议" //文本内容在上面已经有了
+
+        val spannable = SpannableStringBuilder(content)
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@UserLoginActivity, PdfActivity::class.java)
+                intent.putExtra("acc","1");
+                startActivity(intent);
+
+            }
+
+        }, 7, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@UserLoginActivity, PdfActivity::class.java)
+                intent.putExtra("acc","2");
+                startActivity(intent);
+            }
+
+        }, 12, 16, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        //这个一定要记得设置，不然点击不生效。
+        //这个一定要记得设置，不然点击不生效。
+        xuke.setMovementMethod(LinkMovementMethod.getInstance())
+        xuke.setText(spannable)
+
+        val lrd = findViewById<CheckBox>(R.id.lrd)
+        lrd.setOnCheckedChangeListener { buttonView, isChecked ->
+            isAccecpt = isChecked;
+        }
+
         val lastAc: String = SharePreferenceUtils.get(this, "loginAc", "") as String
         (account as TextView).text = lastAc;
         loginBtn!!.setOnClickListener {
+            if (!isAccecpt){
+                Toast.makeText(this,"请勾选用户协议",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
 
             var pindex = 0;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
