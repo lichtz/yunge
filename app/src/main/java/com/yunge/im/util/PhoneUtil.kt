@@ -5,16 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Parcelable
 import android.text.TextUtils
-import android.util.Log
 import com.alibaba.fastjson.JSON
-import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.yunge.im.interfaces.IBlackResult
-import com.yunge.im.mode.ContactBean
 import com.yunge.im.mode.UserBean
 import okhttp3.*
 import java.io.IOException
-import java.lang.Exception
 
 object PhoneUtil {
     private const val TAG = "PhoneUtil"
@@ -24,9 +21,46 @@ object PhoneUtil {
      *
      * @param phoneNum 电话号码
      */
-    fun callPhone1(activity: Activity, phoneNum: String) {
+
+
+    val DUAL_SIM_TYPES: Array<String> = arrayOf<String>(
+        "subscription",
+        "Subscription",
+        "com.android.phone.extra.slot",
+        "phone",
+        "com.android.phone.DialingMode",
+        "simId",
+        "simnum",
+        "phone_type",
+        "simSlot",
+        "extra_asus_dial_use_dualsim",
+        "slot",
+        "sim_slot",
+        "slot_id",
+        "slotId",
+        "slotIdx"
+    )
+
+
+
+
+
+
+    fun callPhone1(activity: Activity, phoneNum: String, intCallSim: Int) {
         val intent = Intent(Intent.ACTION_CALL)
         val data = Uri.parse("tel:$phoneNum")
+        for (dualSimType in DUAL_SIM_TYPES) {
+            intent.putExtra(dualSimType, intCallSim);
+        }
+        intent.putExtra("com.android.phone.force.slot", true);
+        intent.putExtra("Cdma_Supp", true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.putExtra(
+                "android.telecom.extra.PHONE_ACCOUNT_HANDLE",
+                " here You have to get phone account handle list by using telecom manger for both sims:- using this method getCallCapablePhoneAccounts()"
+            );
+        }
+
         intent.data = data
         activity.startActivity(intent)
     }
@@ -44,14 +78,14 @@ object PhoneUtil {
     }
 
 
-    fun lauchCall(activity: Activity?, phoneNum: String?) {
-        if (activity == null || TextUtils.isEmpty(phoneNum)) {
+    fun lauchCall(activity: Activity?, phoneNum: String?, intCallSim: Int) {
+        if (activity == null || TextUtils.isEmpty(phoneNum) || intCallSim == -1) {
             return
         }
-        call(activity, phoneNum)
+        call(activity, phoneNum, intCallSim)
     }
 
-    private fun call(activity: Activity, phoneNum: String?) {
+    private fun call(activity: Activity, phoneNum: String?, intCallSim: Int) {
         var needAutoCall = false;
         if (AppCache.getPhoneNum(activity) != null && AppCache.getPhoneNum(activity)!!.isAutoCall) {
             needAutoCall = true;
@@ -65,7 +99,7 @@ object PhoneUtil {
                 hasPer = i == PackageManager.PERMISSION_GRANTED
             }
             if (hasPer) {
-                callPhone1(activity, phoneNum!!)
+                callPhone1(activity, phoneNum!!, intCallSim)
             } else {
                 callPhone2(activity, phoneNum!!)
             }

@@ -87,15 +87,34 @@ class WhSettingActivity : AppCompatActivity() {
         }
         selectSimRadioButton.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.selectSimRbtn1) {
-                phoneNumBean!!.currentNum = sim1EditText.text.toString()
+                phoneNumBean!!.setSimIndex(0)
                 phoneNumBean!!.currentSimIndex = R.id.selectSimRbtn1
                 AppCache.setPhoneNum(this, phoneNumBean)
             } else {
-                phoneNumBean!!.currentNum = sim2EditText.text.toString()
+                phoneNumBean!!.setSimIndex(1)
                 phoneNumBean!!.currentSimIndex = R.id.selectSimRbtn2
                 AppCache.setPhoneNum(this, phoneNumBean)
             }
         }
+
+
+
+        val selectSimRadioButtonCallMode = findViewById<RadioGroup>(R.id.selectSimCallMode)
+            if (phoneNumBean!!.callTwoSimMode  == "1" || phoneNumBean!!.callTwoSimMode == "") {
+                selectSimRadioButtonCallMode.check(R.id.selectSimRbtnCall1)
+            }else{
+                selectSimRadioButtonCallMode.check(R.id.selectSimRbtnCall2)
+            }
+        selectSimRadioButtonCallMode.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == R.id.selectSimRbtnCall1) {
+                phoneNumBean!!.callTwoSimMode ="1"
+                AppCache.setPhoneNum(this, phoneNumBean)
+            } else {
+                phoneNumBean!!.callTwoSimMode ="2"
+                AppCache.setPhoneNum(this, phoneNumBean)
+            }
+        }
+
 
 
         val selectYysRadioButton = this.findViewById<RadioGroup>(R.id.selectYys)
@@ -144,7 +163,10 @@ class WhSettingActivity : AppCompatActivity() {
         }
         val clearBtn = findViewById<FrameLayout>(R.id.autoClearFm)
         clearBtn.setOnClickListener {
-            PhoneUtil.lauchCall(this, "%23%2321%23")
+            val phoneNum = AppCache.getPhoneNum(this);
+            if (phoneNum != null) {
+                PhoneUtil.lauchCall(this, "%23%23002%23",phoneNum.getSimIndex())
+            }
         }
 
         val hzs = findViewById<SwitchMaterial>(R.id.hzSwitchBtn)

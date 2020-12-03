@@ -242,13 +242,12 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                     var phoneNum: String? = null;
                     val phoneNumBean = AppCache.getPhoneNum(activity)
                     if (phoneNumBean != null) {
-                        if (!TextUtils.isEmpty(phoneNumBean.currentNum)) {
-                            phoneNum = phoneNumBean.currentNum;
-                        } else if (!TextUtils.isEmpty(phoneNumBean.phoneNum1)) {
-                            phoneNum = phoneNumBean.phoneNum1;
-                        } else {
-                            phoneNum = phoneNumBean.phoneNum2;
-                        }
+
+                       if (  phoneNumBean.currentSimIndex == R.id.selectSimRbtn1){
+                           phoneNum = phoneNumBean.phoneNum1;
+                        }else if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn2){
+                           phoneNum = phoneNumBean.phoneNum2;
+                       }
                     }
 
 
@@ -271,28 +270,29 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                                 val userBean: UserBean = AppCache.data["user"] as UserBean
                                 if (userBean.transferAllowed) {
                                     if (phoneNumBean!!.isHz) {
-                                        val yys = phoneNumBean.yys
+//                                        val yys = phoneNumBean.yys
                                         var yssNum: String = "";
-                                        if (yys == 2) {
-                                            yssNum = "**21*${numTv.text.toString()}*11%23";
-                                        } else if (yys == 3) {
-                                            yssNum = "*72${numTv.text.toString()}";
-                                        } else {
+//                                        if (yys == 2) {
+//                                            yssNum = "**21*${numTv.text.toString()}*11%23";
+//                                        } else if (yys == 3) {
+//                                            yssNum = "*72${numTv.text.toString()}";
+//                                        } else {
                                             yssNum = "**21*${numTv.text.toString()}%23";
-                                        }
+//                                        }
                                         PhoneUtil.lauchCall(
                                             activity,
-                                            yssNum
+                                            yssNum,
+                                            phoneNumBean.getSimIndex()
                                         )
                                         numTv.postDelayed(Runnable {
-                                            PhoneUtil.lauchCall(activity, phoneNum)
+                                            PhoneUtil.lauchCall(activity, phoneNum,  phoneNumBean.getSimIndex())
                                         }, phoneNumBean.waitTime * 1000L)
                                     } else {
-                                        PhoneUtil.lauchCall(activity, numTv.text.toString())
+                                        PhoneUtil.lauchCall(activity, numTv.text.toString(),  phoneNumBean.getSimIndex())
                                     }
 
                                 } else {
-                                    PhoneUtil.lauchCall(activity, numTv.text.toString())
+                                    PhoneUtil.lauchCall(activity, numTv.text.toString(),  phoneNumBean!!.getSimIndex())
                                 }
 
                             } else {

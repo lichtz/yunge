@@ -134,7 +134,13 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
         if (phoneReceiver != null) {
             unregisterReceiver(phoneReceiver)
         }
-        PhoneUtil.lauchCall(this, "%23%2321%23")
+        val phoneNum = AppCache.getPhoneNum(this)
+        var simIndex =0;
+        if (phoneNum != null){
+             simIndex = phoneNum.getSimIndex()
+
+        }
+        PhoneUtil.lauchCall(this, "%23%23002%23",simIndex )
     }
 
     override fun end() {
@@ -142,11 +148,7 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
         val phoneNum = AppCache.getPhoneNum(this)
         val hz = phoneNum!!.isHz
         if (hz) {
-            if (phoneNum.yys == 3) {
-                PhoneUtil.lauchCall(this, "*730")
-            } else {
-                PhoneUtil.lauchCall(this, "%23%2321%23")
-            }
+            PhoneUtil.lauchCall(this, "%23%23002%23",phoneNum.getSimIndex())
         }
     }
 
