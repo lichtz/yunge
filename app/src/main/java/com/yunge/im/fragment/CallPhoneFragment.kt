@@ -241,13 +241,24 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                 if (!TextUtils.isEmpty(numTv.text)) {
                     var phoneNum: String? = null;
                     val phoneNumBean = AppCache.getPhoneNum(activity)
-                    if (phoneNumBean != null) {
 
-                       if (  phoneNumBean.currentSimIndex == R.id.selectSimRbtn1){
-                           phoneNum = phoneNumBean.phoneNum1;
-                        }else if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn2){
-                           phoneNum = phoneNumBean.phoneNum2;
-                       }
+
+
+                    if (phoneNumBean != null) {
+                        if (phoneNumBean.isMutableSim) {
+
+                            if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn1) {
+                                phoneNum = phoneNumBean.phoneNum1;
+                            } else if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn2) {
+                                phoneNum = phoneNumBean.phoneNum2;
+                            }
+                        }else{
+                            if (!TextUtils.isEmpty(phoneNumBean.phoneNum1)){
+                                phoneNum = phoneNumBean.phoneNum1;
+                            }else if (!TextUtils.isEmpty(phoneNumBean.phoneNum2)){
+                                phoneNum = phoneNumBean.phoneNum2;
+                            }
+                        }
                     }
 
 

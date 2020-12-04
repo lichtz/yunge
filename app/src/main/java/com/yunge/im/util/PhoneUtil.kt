@@ -1,5 +1,6 @@
 package com.yunge.im.util
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.text.TextUtils
+import android.util.Log
 import com.alibaba.fastjson.JSON
 import com.yunge.im.interfaces.IBlackResult
 import com.yunge.im.mode.UserBean
@@ -42,25 +44,24 @@ object PhoneUtil {
     )
 
 
-
-
-
-
     fun callPhone1(activity: Activity, phoneNum: String, intCallSim: Int) {
         val intent = Intent(Intent.ACTION_CALL)
         val data = Uri.parse("tel:$phoneNum")
-        for (dualSimType in DUAL_SIM_TYPES) {
-            intent.putExtra(dualSimType, intCallSim);
+        val p = AppCache.getPhoneNum(activity)
+        if (p!!.isMutableSim) {
+            for (dualSimType in DUAL_SIM_TYPES) {
+                intent.putExtra(dualSimType, intCallSim);
+            }
+            intent.putExtra("com.android.phone.force.slot", true);
+            intent.putExtra("Cdma_Supp", true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                intent.putExtra(
+                    "android.telecom.extra.PHONE_ACCOUNT_HANDLE",
+                    " here You have to get phone account handle list by using telecom manger for both sims:- using this method getCallCapablePhoneAccounts()"
+                );
+            }
+            Log.d(TAG, "callPhone1: mmmtable")
         }
-        intent.putExtra("com.android.phone.force.slot", true);
-        intent.putExtra("Cdma_Supp", true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            intent.putExtra(
-                "android.telecom.extra.PHONE_ACCOUNT_HANDLE",
-                " here You have to get phone account handle list by using telecom manger for both sims:- using this method getCallCapablePhoneAccounts()"
-            );
-        }
-
         intent.data = data
         activity.startActivity(intent)
     }
@@ -79,7 +80,11 @@ object PhoneUtil {
 
 
     fun lauchCall(activity: Activity?, phoneNum: String?, intCallSim: Int) {
-        if (activity == null || TextUtils.isEmpty(phoneNum) || intCallSim == -1) {
+        if (activity == null || TextUtils.isEmpty(phoneNum)) {
+            return
+        }
+        val p = AppCache.getPhoneNum(activity)
+        if (p!!.isMutableSim && intCallSim == -1) {
             return
         }
         call(activity, phoneNum, intCallSim)
@@ -95,7 +100,7 @@ object PhoneUtil {
         } else {
             var hasPer = true
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val i = activity.checkSelfPermission("android.permission.CALL_PHONE")
+                val i = activity.checkSelfPermission(Manifest.permission.CALL_PHONE)
                 hasPer = i == PackageManager.PERMISSION_GRANTED
             }
             if (hasPer) {

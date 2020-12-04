@@ -1,5 +1,6 @@
 package com.yunge.im
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -122,39 +123,26 @@ class UserLoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            var pindex = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val i = checkSelfPermission("android.permission.CALL_PHONE")
-                val i2 = checkSelfPermission("android.permission.PROCESS_OUTGOING_CALLS")
-                if (i != PackageManager.PERMISSION_GRANTED && i2 != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 3;
-                } else if (i2 != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 2;
-                } else if (i != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 1;
-                }
-            }
+            var pList:ArrayList<String> = ArrayList();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val i = checkSelfPermission(Manifest.permission.CALL_PHONE)
+                    if (i != PackageManager.PERMISSION_GRANTED) {
+                        pList.add(Manifest.permission.CALL_PHONE)
+                    }
+                    val i2 = checkSelfPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
+                    if (i2 != PackageManager.PERMISSION_GRANTED) {
+                        pList.add(Manifest.permission.PROCESS_OUTGOING_CALLS)
+                    }
+//                    val i3 = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+//                    if (i3 != PackageManager.PERMISSION_GRANTED) {
+//                        pList.add(Manifest.permission.READ_PHONE_STATE)
+//                    }
 
-            if (pindex != 0) {
-                var s: String = "";
-                var pArr = arrayOf("")
-                if (pindex == 1) {
-                    s = "【拨打电话权】用于呼叫转移功能，属于必要权限请授权";
-                    pArr = arrayOf(
-                        "android.permission.CALL_PHONE",
-                    )
-                } else if (pindex == 2) {
-                    s = "【通讯记录权限】用于取消呼叫转移功能，属于必要权限请授权";
-                    pArr = arrayOf(
-                        "android.permission.PROCESS_OUTGOING_CALLS"
-                    )
-                } else if (pindex == 3) {
-                    s = "【拨打电话权】限用于呼叫转移功能\n【通讯记录权限】限用于取消呼叫转移功能\n属于必要权限请授权"
-                    pArr = arrayOf(
-                        "android.permission.CALL_PHONE",
-                        "android.permission.PROCESS_OUTGOING_CALLS"
-                    )
                 }
+
+            if (pList.size > 0) {
+                val s = "【拨打电话权】限用于呼叫转移功能\n【通讯记录权限】限用于取消呼叫转移功能\n属于必要权限请授权"
+                val pArr = pList.toTypedArray()
 
                 QMUIDialog.MessageDialogBuilder(this)
                     .setTitle("权限请求")

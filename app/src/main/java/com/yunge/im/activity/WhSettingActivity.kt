@@ -215,6 +215,27 @@ class WhSettingActivity : AppCompatActivity() {
 
         val back = findViewById<ImageView>(R.id.back)
         back.setOnClickListener { finish() }
+
+        val mtableSimSetting = findViewById<SwitchMaterial>(R.id.mtableSimSetting);
+        val mtableSimSettinLn = findViewById<LinearLayout>(R.id.mutableSimSettingLn)
+        if (phoneNumBean!!.isMutableSim){
+            mtableSimSettinLn.visibility = View.VISIBLE;
+        }else{
+            mtableSimSettinLn.visibility = View.GONE;
+        }
+        mtableSimSetting.isChecked = phoneNumBean!!.isMutableSim;
+        mtableSimSetting.setOnCheckedChangeListener { _, isChecked ->
+
+            if (isChecked){
+                mtableSimSettinLn.visibility = View.VISIBLE;
+            }else{
+                mtableSimSettinLn.visibility = View.GONE;
+            }
+            phoneNumBean!!.isMutableSim = isChecked
+            AppCache.setPhoneNum(this, phoneNumBean)
+
+
+        }
     }
 
     override fun onPause() {

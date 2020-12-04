@@ -1,5 +1,6 @@
 package com.yunge.im
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -14,15 +15,12 @@ import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.qmuiteam.qmui.layout.QMUIButton
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
-import com.qmuiteam.qmui.widget.QMUILoadingView
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog.MessageDialogBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.yunge.im.interfaces.ILoginResult
 import com.yunge.im.mode.UserBean
 import com.yunge.im.util.AppCache
-import com.yunge.im.util.ContactUtils
-import com.yunge.im.util.PhoneUtils
 import com.yunge.im.util.SharePreferenceUtils
 import okhttp3.*
 import java.io.IOException
@@ -51,16 +49,16 @@ class LoginActivity : AppCompatActivity() {
 
                 val userBean =
                     JSON.parseObject(userStr, UserBean::class.java)
-                if (!TextUtils.isEmpty(userBean.loginAccount )){
-                    login(userBean.loginAccount, userBean.loginPass,object :ILoginResult{
+                if (!TextUtils.isEmpty(userBean.loginAccount)){
+                    login(userBean.loginAccount, userBean.loginPass, object : ILoginResult {
                         override fun result(userBean: UserBean?, errorTip: String?) {
                             if (userBean == null) {
-                                runOnUiThread{
+                                runOnUiThread {
                                     showView();
 
                                 }
 
-                            }else{
+                            } else {
                                 startActivity(Intent(getActivity(), SettingActivity::class.java))
                                 finish()
                             }
@@ -71,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             }
-        }catch (e:Exception){
+        }catch (e: Exception){
 
         }
 
@@ -89,42 +87,28 @@ class LoginActivity : AppCompatActivity() {
         loginBtn = findViewById<QMUIButton>(R.id.login)
         loginBtn!!.setChangeAlphaWhenPress(true)
         loginBtn!!.setOnClickListener {
-
-            var pindex = 0;
+            var pList:ArrayList<String> = ArrayList();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                val i = getActivity().checkSelfPermission("android.permission.CALL_PHONE")
-                val i2 =
-                    getActivity().checkSelfPermission("android.permission.PROCESS_OUTGOING_CALLS")
-                if (i != PackageManager.PERMISSION_GRANTED && i2 != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 3;
-                } else if (i2 != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 2;
-                } else if (i != PackageManager.PERMISSION_GRANTED) {
-                    pindex = 1;
+                val i = getActivity().checkSelfPermission(Manifest.permission.CALL_PHONE)
+                if(i != PackageManager.PERMISSION_GRANTED ){
+                    pList.add(Manifest.permission.CALL_PHONE)
                 }
+                val i2 =
+                    getActivity().checkSelfPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
+                if(i2 != PackageManager.PERMISSION_GRANTED ){
+                    pList.add(Manifest.permission.PROCESS_OUTGOING_CALLS)
+                }
+                val i3 =
+                    getActivity().checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                if(i3 != PackageManager.PERMISSION_GRANTED ){
+                    pList.add(Manifest.permission.READ_PHONE_STATE)
+                }
+
             }
 
-            if (pindex != 0) {
-                var s: String = "";
-                var pArr = arrayOf("")
-                if (pindex == 1) {
-                    s = "【拨打电话权】用于呼叫转移功能，属于必要权限请授权";
-                    pArr = arrayOf(
-                        "android.permission.CALL_PHONE",
-                    )
-                } else if (pindex == 2) {
-                    s = "【通讯记录权限】用于取消呼叫转移功能，属于必要权限请授权";
-                    pArr = arrayOf(
-                        "android.permission.PROCESS_OUTGOING_CALLS"
-                    )
-                } else if (pindex == 3) {
-                    s = "【拨打电话权】限用于呼叫转移功能\n【通讯记录权限】限用于取消呼叫转移功能\n属于必要权限请授权"
-                    pArr = arrayOf(
-                        "android.permission.CALL_PHONE",
-                        "android.permission.PROCESS_OUTGOING_CALLS"
-                    )
-                }
-
+            if (pList.size > 0) {
+                val s = "【拨打电话权】限用于呼叫转移功能\n【通讯记录权限】限用于取消呼叫转移功能\n属于必要权限请授权"
+                val pArr = pList.toTypedArray()
                 MessageDialogBuilder(getActivity())
                     .setTitle("权限请求")
                     .setMessage(s)
@@ -172,7 +156,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private var tipDialog: QMUITipDialog? = null;
-    private fun login(name: String, pass: String,iLoginResult: ILoginResult) {
+    private fun login(name: String, pass: String, iLoginResult: ILoginResult) {
 
         var url = "http://8.135.13.129:9000/caller/api/login" //必须以反斜杠结尾
         val JSONM = MediaType.parse("application/json; charset=utf-8");
@@ -187,8 +171,8 @@ class LoginActivity : AppCompatActivity() {
         val okHttpClient = OkHttpClient()
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if (iLoginResult != null){
-                    iLoginResult.result(null,"请求错误，请联系供应商")
+                if (iLoginResult != null) {
+                    iLoginResult.result(null, "请求错误，请联系供应商")
                 }
 
 
@@ -199,37 +183,37 @@ class LoginActivity : AppCompatActivity() {
                     tipDialog!!.dismiss()
 
                     val code = response.code()
-                    if (code == 400 ){
-                        if (iLoginResult != null){
-                            iLoginResult.result(null,"用户不存在")
+                    if (code == 400) {
+                        if (iLoginResult != null) {
+                            iLoginResult.result(null, "用户不存在")
                         }
 
-                    }else if (code == 403){
-                        if (iLoginResult != null){
-                            iLoginResult.result(null,"密码错误")
+                    } else if (code == 403) {
+                        if (iLoginResult != null) {
+                            iLoginResult.result(null, "密码错误")
                         }
-                    }else if (code == 200){
+                    } else if (code == 200) {
                         val string = response.body()!!.string()
                         val userBean =
                             JSON.parseObject(string, UserBean::class.java)
                         userBean.loginAccount = name;
                         userBean.loginPass = pass;
                         AppCache.data["user"] = userBean
-                        val toString  = JSONObject.toJSONString(userBean)
+                        val toString = JSONObject.toJSONString(userBean)
                         SharePreferenceUtils.put(getActivity(), "user", toString)
-                        if (iLoginResult != null){
-                            iLoginResult.result(userBean,"")
+                        if (iLoginResult != null) {
+                            iLoginResult.result(userBean, "")
                         }
 
-                    }else{
-                        if (iLoginResult != null){
-                            iLoginResult.result(null,"请求错误，请联系供应商")
+                    } else {
+                        if (iLoginResult != null) {
+                            iLoginResult.result(null, "请求错误，请联系供应商")
                         }
                     }
 
                 } catch (e: Exception) {
-                    if (iLoginResult != null){
-                        iLoginResult.result(null,"请求错误，请联系供应商")
+                    if (iLoginResult != null) {
+                        iLoginResult.result(null, "请求错误，请联系供应商")
                     }
                 }
             }
@@ -243,7 +227,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    fun showError(tip:String?) {
+    fun showError(tip: String?) {
         getActivity().runOnUiThread {
             tipDialog = QMUITipDialog.Builder(getActivity())
                 .setIconType(QMUITipDialog.Builder.ICON_TYPE_FAIL)
