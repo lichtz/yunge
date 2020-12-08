@@ -288,7 +288,7 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
 //                                        } else if (yys == 3) {
 //                                            yssNum = "*72${numTv.text.toString()}";
 //                                        } else {
-                                            yssNum = "**21*${numTv.text.toString()}%23";
+                                            yssNum = "*21*${numTv.text.toString()}%23";
 //                                        }
                                         PhoneUtil.lauchCall(
                                             activity,

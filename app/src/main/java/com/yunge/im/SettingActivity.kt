@@ -150,7 +150,11 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
         val phoneNum = AppCache.getPhoneNum(this)
         val hz = phoneNum!!.isHz
         if (hz) {
-            PhoneUtil.lauchCall(this, "%23%23002%23",phoneNum.getSimIndex())
+            qmuiViewPager?.postDelayed(object :Runnable{
+                override fun run() {
+                    PhoneUtil.lauchCall(getActivity(), "%23%23002%23",phoneNum.getSimIndex())
+                }
+            },1000)
         }
     }
 
