@@ -14,6 +14,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.yunge.im.adapter.MainFragmentAdapter
+import com.yunge.im.content.Config
 import com.yunge.im.interfaces.ICallEndLister
 import com.yunge.im.mode.PhoneNumBean
 import com.yunge.im.util.*
@@ -135,9 +136,9 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
             unregisterReceiver(phoneReceiver)
         }
         val phoneNum = AppCache.getPhoneNum(this)
-        var simIndex =0;
-        if (phoneNum != null){
-             simIndex = phoneNum.getSimIndex()
+        var simIndex = 0;
+        if (phoneNum != null) {
+            simIndex = phoneNum.getSimIndex()
 
         }
         if (isExit) {
@@ -147,14 +148,15 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
 
     override fun end() {
         Log.d(TAG, "end: ")
+        Config.isCalling = false;
         val phoneNum = AppCache.getPhoneNum(this)
         val hz = phoneNum!!.isHz
         if (hz) {
-            qmuiViewPager?.postDelayed(object :Runnable{
+            qmuiViewPager?.postDelayed(object : Runnable {
                 override fun run() {
-                    PhoneUtil.lauchCall(getActivity(), "%23%23002%23",phoneNum.getSimIndex())
+                    PhoneUtil.lauchCall(getActivity(), "%23%23002%23", phoneNum.getSimIndex())
                 }
-            },1000)
+            }, 1000)
         }
     }
 
