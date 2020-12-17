@@ -1,8 +1,14 @@
+
+
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
 
+
+
+//ext.app_version='1.2.0'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -12,8 +18,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0.0"
-
+        versionName rootProject.app_version
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

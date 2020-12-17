@@ -10,10 +10,12 @@ import android.os.Parcelable
 import android.text.TextUtils
 import android.util.Log
 import com.alibaba.fastjson.JSON
+import com.yunge.im.BuildConfig
 import com.yunge.im.interfaces.IBlackResult
 import com.yunge.im.mode.UserBean
 import okhttp3.*
 import java.io.IOException
+import java.security.SecureRandom
 
 object PhoneUtil {
     private const val TAG = "PhoneUtil"
@@ -117,9 +119,14 @@ object PhoneUtil {
             getBlackData(userBean.bwsToken, num, iBlackResult);
         }
     }
+    val secureRandom = SecureRandom()
+    private fun getRandom():Int{
+      return secureRandom.nextInt(100000000);
+    }
 
     private fun getBlackData(bwstoken: String, num: String, iBlackResult: IBlackResult) {
-        val url = "http://112.51.246.6:9003/bws/caller/$bwstoken/$num"
+
+        val url = "http://112.51.246.6:9003/bws/caller/$bwstoken/$num?version="+BuildConfig.VERSION_NAME+"&rad="+getRandom();
         val okHttpClient = OkHttpClient()
         val request = Request.Builder()
             .url(url)
@@ -128,17 +135,18 @@ object PhoneUtil {
         val call = okHttpClient.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                iBlackResult?.canCall(false)
+                iBlackResult?.canCall(false,"-1","-1")
             }
 
             override fun onResponse(call: Call, response: Response) {
                 try {
+                    val code = response.code().toString()
                     val body = response.body()?.string()
                     val arseObject = JSON.parseObject(body)
-                    val any = arseObject["code"]
-                    iBlackResult?.canCall("200" == any)
+                    val any = arseObject["code"].toString()
+                    iBlackResult?.canCall("200" == any,any,code)
                 } catch (e: Exception) {
-                    iBlackResult?.canCall(false)
+                    iBlackResult?.canCall(false,"-1","-1")
                 }
 
 

@@ -9,12 +9,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +24,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.yunge.im.R
 import com.yunge.im.activity.WhSettingActivity
 import com.yunge.im.adapter.ContactAdapter
+import com.yunge.im.content.Config
 import com.yunge.im.interfaces.IBlackResult
 import com.yunge.im.interfaces.ICallNumListener
 import com.yunge.im.mode.CallLogBean
@@ -56,7 +55,7 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
     }
 
     lateinit var numTv: TextView;
-    var clickTag:String ? = null;
+    var clickTag: String? = null;
     val iCallNumListener: ICallNumListener = ICallNumListener {
         clickTag = it;
         numTv.text = it;
@@ -197,6 +196,7 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
     fun setNumText(str: String) {
         stringBuilder.append(str);
         numTv.text = stringBuilder;
+        Config.isCalling = false;
     }
 
     override fun onClick(v: View?) {
@@ -238,83 +238,115 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                 setNumText("#");
             }
             R.id.call -> {
-                if (!TextUtils.isEmpty(numTv.text)) {
-                    var phoneNum: String? = null;
-                    val phoneNumBean = AppCache.getPhoneNum(activity)
+                if (!Config.isCalling) {
+                    val tipDialog = QMUITipDialog.Builder(context)
+                        .setTipWord("正在呼转中...")
+                        .create()
+                    tipDialog.show()
+                    numTv.postDelayed({
+                        tipDialog.dismiss()
+                    }, 2000);
+                    Config.isCalling = true;
+                    if (!TextUtils.isEmpty(numTv.text)) {
+                        var phoneNum: String? = null;
+                        val phoneNumBean = AppCache.getPhoneNum(activity)
 
 
 
-                    if (phoneNumBean != null) {
-                        if (phoneNumBean.isMutableSim) {
+                        if (phoneNumBean != null) {
+                            if (phoneNumBean.isMutableSim) {
 
-                            if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn1) {
-                                phoneNum = phoneNumBean.phoneNum1;
-                            } else if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn2) {
-                                phoneNum = phoneNumBean.phoneNum2;
-                            }
-                        }else{
-                            if (!TextUtils.isEmpty(phoneNumBean.phoneNum1)){
-                                phoneNum = phoneNumBean.phoneNum1;
-                            }else if (!TextUtils.isEmpty(phoneNumBean.phoneNum2)){
-                                phoneNum = phoneNumBean.phoneNum2;
+                                if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn1) {
+                                    phoneNum = phoneNumBean.phoneNum1;
+                                } else if (phoneNumBean.currentSimIndex == R.id.selectSimRbtn2) {
+                                    phoneNum = phoneNumBean.phoneNum2;
+                                }
+                            } else {
+                                if (!TextUtils.isEmpty(phoneNumBean.phoneNum1)) {
+                                    phoneNum = phoneNumBean.phoneNum1;
+                                } else if (!TextUtils.isEmpty(phoneNumBean.phoneNum2)) {
+                                    phoneNum = phoneNumBean.phoneNum2;
+                                }
                             }
                         }
-                    }
 
 
-                    if (TextUtils.isEmpty(phoneNum)) {
-                        val tipDialog = QMUITipDialog.Builder(context)
-                            .setTipWord("请在外呼设置页正确填写信息")
-                            .create()
-                        tipDialog.show()
-                        numTv.postDelayed({
-                            tipDialog.dismiss()
-                            var intent: Intent = Intent(activity, WhSettingActivity::class.java)
-                            startActivity(intent);
-                        }, 2000);
-                        return
-                    }
-                    PhoneUtil.checkUserInfo(activity, numTv.text.toString(), object : IBlackResult {
-                        override fun canCall(can: Boolean) {
-                            if (can) {
+                        if (TextUtils.isEmpty(phoneNum)) {
+                            val tipDialog = QMUITipDialog.Builder(context)
+                                .setTipWord("请在外呼设置页正确填写信息")
+                                .create()
+                            tipDialog.show()
+                            numTv.postDelayed({
+                                tipDialog.dismiss()
+                                var intent: Intent = Intent(activity, WhSettingActivity::class.java)
+                                startActivity(intent);
+                            }, 2000);
+                            Config.isCalling = false;
+                            return
+                        }
+                        PhoneUtil.checkUserInfo(
+                            activity,
+                            numTv.text.toString(),
+                            object : IBlackResult {
+                                override fun canCall(
+                                    can: Boolean,
+                                    errorCode: String,
+                                    httpErrorCode: String
+                                ) {
+                                    if (can) {
 
-                                val userBean: UserBean = AppCache.data["user"] as UserBean
-                                if (userBean.transferAllowed) {
-                                    if (phoneNumBean!!.isHz) {
+                                        val userBean: UserBean = AppCache.data["user"] as UserBean
+                                        if (userBean.transferAllowed) {
+                                            if (phoneNumBean!!.isHz) {
 //                                        val yys = phoneNumBean.yys
-                                        var yssNum: String = "";
+                                                var yssNum: String = "";
 //                                        if (yys == 2) {
 //                                            yssNum = "**21*${numTv.text.toString()}*11%23";
 //                                        } else if (yys == 3) {
 //                                            yssNum = "*72${numTv.text.toString()}";
 //                                        } else {
-                                            yssNum = "*21*${numTv.text.toString()}%23";
+                                                yssNum = "*21*${numTv.text.toString()}%23";
 //                                        }
-                                        PhoneUtil.lauchCall(
-                                            activity,
-                                            yssNum,
-                                            phoneNumBean.getSimIndex()
-                                        )
-                                        numTv.postDelayed(Runnable {
-                                            PhoneUtil.lauchCall(activity, phoneNum,  phoneNumBean.getSimIndex())
-                                        }, phoneNumBean.waitTime * 1000L)
+                                                PhoneUtil.lauchCall(
+                                                    activity,
+                                                    yssNum,
+                                                    phoneNumBean.getSimIndex()
+                                                )
+                                                numTv.postDelayed(Runnable {
+                                                    PhoneUtil.lauchCall(
+                                                        activity,
+                                                        phoneNum,
+                                                        phoneNumBean.getSimIndex()
+                                                    )
+                                                }, phoneNumBean.waitTime * 1000L)
+                                            } else {
+                                                PhoneUtil.lauchCall(
+                                                    activity,
+                                                    numTv.text.toString(),
+                                                    phoneNumBean.getSimIndex()
+                                                )
+                                            }
+
+                                        } else {
+                                            PhoneUtil.lauchCall(
+                                                activity,
+                                                numTv.text.toString(),
+                                                phoneNumBean!!.getSimIndex()
+                                            )
+                                        }
                                     } else {
-                                        PhoneUtil.lauchCall(activity, numTv.text.toString(),  phoneNumBean.getSimIndex())
+                                        showError("此号码存在高风险，不允许呼叫" + "(code:${httpErrorCode}_$errorCode)")
+                                        Config.isCalling = false;
                                     }
 
-                                } else {
-                                    PhoneUtil.lauchCall(activity, numTv.text.toString(),  phoneNumBean!!.getSimIndex())
                                 }
+                            })
 
-                            } else {
-                                showError("此号码存在高风险，不允许呼叫")
-                            }
-                        }
-                    })
-
+                    }
                 }
             }
             R.id.delete -> {
+                Config.isCalling = false;
                 if (stringBuilder.isNotEmpty()) {
                     stringBuilder = stringBuilder.deleteCharAt(stringBuilder.length - 1);
                 }
@@ -322,6 +354,7 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
 
             }
             R.id.hide -> {
+                Config.isCalling = false;
                 panterl?.visibility = View.GONE;
                 showKeyboardView?.visibility = View.VISIBLE
 
