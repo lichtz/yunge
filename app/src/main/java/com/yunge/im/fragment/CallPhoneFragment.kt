@@ -238,6 +238,19 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                 setNumText("#");
             }
             R.id.call -> {
+                if (TextUtils.isEmpty(numTv.text)) {
+                    return
+                }
+                if (Config.isClearing){
+                    val sDialog = QMUITipDialog.Builder(context)
+                        .setTipWord("正在取消呼转,请稍后...")
+                        .create()
+                    sDialog.show()
+                    numTv.postDelayed({
+                        sDialog.dismiss()
+                    }, 3000);
+                    return
+                }
                 if (!Config.isCalling) {
                     val tipDialog = QMUITipDialog.Builder(context)
                         .setTipWord("正在呼转中...")
@@ -245,7 +258,7 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                     tipDialog.show()
                     numTv.postDelayed({
                         tipDialog.dismiss()
-                    }, 2000);
+                    }, 4000);
                     Config.isCalling = true;
                     if (!TextUtils.isEmpty(numTv.text)) {
                         var phoneNum: String? = null;
@@ -334,6 +347,9 @@ class CallPhoneFragment : Fragment(), View.OnClickListener {
                                                 phoneNumBean!!.getSimIndex()
                                             )
                                         }
+
+                                        numTv.text = null;
+                                        stringBuilder.clear();
                                     } else {
                                         showError("此号码存在高风险，不允许呼叫" + "(code:${httpErrorCode}_$errorCode)")
                                         Config.isCalling = false;

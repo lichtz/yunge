@@ -133,10 +133,10 @@ class UserLoginActivity : AppCompatActivity() {
                     if (i2 != PackageManager.PERMISSION_GRANTED) {
                         pList.add(Manifest.permission.PROCESS_OUTGOING_CALLS)
                     }
-//                    val i3 = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-//                    if (i3 != PackageManager.PERMISSION_GRANTED) {
-//                        pList.add(Manifest.permission.READ_PHONE_STATE)
-//                    }
+                    val i3 = checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
+                    if (i3 != PackageManager.PERMISSION_GRANTED) {
+                        pList.add(Manifest.permission.READ_PHONE_STATE)
+                    }
 
                 }
 

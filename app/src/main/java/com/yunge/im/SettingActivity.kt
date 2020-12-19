@@ -148,7 +148,16 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
 
     override fun end() {
         Log.d(TAG, "end: ")
-        Config.isCalling = false;
+        Config.isClearing = true;
+        val phoneNumBean = AppCache.getPhoneNum(this)
+        qmuiViewPager?.postDelayed(object : Runnable {
+            override fun run() {
+                Config.isCalling = false;
+                Config.isClearing = false;
+            }
+
+        }, phoneNumBean!!.waitTime * 1000L)
+
         val phoneNum = AppCache.getPhoneNum(this)
         val hz = phoneNum!!.isHz
         if (hz) {
@@ -156,7 +165,7 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
                 override fun run() {
                     PhoneUtil.lauchCall(getActivity(), "%23%23002%23", phoneNum.getSimIndex())
                 }
-            }, 1000)
+            }, 200)
         }
     }
 
