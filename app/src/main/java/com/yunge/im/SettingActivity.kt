@@ -4,6 +4,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.yunge.im.adapter.MainFragmentAdapter
 import com.yunge.im.content.Config
+import com.yunge.im.dialog.CallCancelDialog
 import com.yunge.im.interfaces.ICallEndLister
 import com.yunge.im.mode.PhoneNumBean
 import com.yunge.im.util.*
@@ -156,7 +158,7 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
                 Config.isClearing = false;
             }
 
-        }, phoneNumBean!!.waitTime * 1000L)
+        }, phoneNumBean!!.waitTime * 2000L)
 
         val phoneNum = AppCache.getPhoneNum(this)
         val hz = phoneNum!!.isHz
@@ -165,8 +167,20 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
                 override fun run() {
                     PhoneUtil.lauchCall(getActivity(), "%23%23002%23", phoneNum.getSimIndex())
                 }
-            }, 200)
+            }, 2000)
         }
+    }
+
+    override fun showCallInfoAlert(isAuto: Boolean) {
+        if (!isAuto) {
+            val callCancelDialog = CallCancelDialog(this)
+            callCancelDialog.setClickListener(cancelDialogBtn);
+            callCancelDialog.show();
+        }
+    }
+
+    val cancelDialogBtn: View.OnClickListener = View.OnClickListener {
+        end()
     }
 
 
@@ -176,10 +190,12 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
 
     var isExit: Boolean = false;
     private fun exitBy2Click() {
+
         var tExit: Timer? = null
         if (!isExit) {
+
             isExit = true // 准备退出
-            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "请再按一次退出程序", Toast.LENGTH_LONG).show();
             tExit = Timer()
             tExit.schedule(object : TimerTask() {
                 override fun run() {
@@ -187,8 +203,25 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
                 }
             }, 2000) // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
         } else {
+            Toast.makeText(this, "正在清除呼叫转移，3s后退出请稍等。", Toast.LENGTH_LONG).show();
+            val phoneNum = AppCache.getPhoneNum(this)
+            val hz = phoneNum!!.isHz
+            if (hz) {
+                qmuiViewPager?.postDelayed(object : Runnable {
+                    override fun run() {
+                        PhoneUtil.lauchCall(getActivity(), "%23%23002%23", phoneNum.getSimIndex())
+                    }
+                }, 0)
 
-            finish()
+            }
+
+            qmuiViewPager?.postDelayed(object :Runnable{
+                override fun run() {
+                    finish()
+                }
+            },4000)
+
+
 //            System.exit(0);
         }
     }

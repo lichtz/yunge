@@ -331,6 +331,7 @@
 
         </RadioGroup>
 
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -367,6 +368,40 @@
                 android:checked="true" />
         </FrameLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_shape"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_robot_line" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:singleLine="true"
+                android:text="自动转接"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:typeface="normal" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/isAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:checked="true" />
+        </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -406,7 +441,7 @@
                 android:inputType="phone"
                 android:paddingStart="4dp"
                 android:singleLine="true"
-                android:text="4"
+                android:text="5"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:typeface="normal" />

@@ -192,6 +192,14 @@ class WhSettingActivity : AppCompatActivity() {
 
 
         }
+
+        val auto = findViewById<SwitchMaterial>(R.id.isAuto)
+        auto.isChecked = phoneNumBean!!.isAuto
+        auto.setOnCheckedChangeListener { _, isChecked ->
+            phoneNumBean!!.isAuto = isChecked
+            AppCache.setPhoneNum(this, phoneNumBean)
+        }
+
         val waitTime = findViewById<EditText>(R.id.waitTime)
         if (phoneNumBean!!.waitTime != -1) {
             val textView = waitTime as TextView
