@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,8 @@ import com.yunge.im.R;
 
 
 public class CallCancelDialog extends Dialog {
+
+    private View view;
 
     public CallCancelDialog(@NonNull Context context) {
         super(context);
@@ -30,7 +33,7 @@ public class CallCancelDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call_alert_dialog);
-        View view = findViewById(R.id.cancel_Hz);
+        view = findViewById(R.id.cancel_Hz);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,4 +50,14 @@ public class CallCancelDialog extends Dialog {
     public void setClickListener(View.OnClickListener clickListener) {
         this.clickListener = clickListener;
     }
+
+    public void show(String title) {
+        show();
+        TextView textView = findViewById(R.id.content);
+        textView.setText(title);
+        View cancleView = findViewById(R.id.cancel_Hz);
+        cancleView.setVisibility(View.GONE);
+
+    }
+
 }

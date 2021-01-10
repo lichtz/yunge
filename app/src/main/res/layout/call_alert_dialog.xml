@@ -8,8 +8,9 @@
         android:layout_gravity="center"
         android:elevation="5dp"
         android:layout_width="300dp"
-        android:layout_height="148dp">
+        android:layout_height="wrap_content">
         <TextView
+            android:id="@+id/content"
             android:textSize="18sp"
             android:textColor="#000000"
             android:gravity="center"
@@ -53,6 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
             <TextView
+                android:id="@+id/cancelbtn"
                 android:textSize="18sp"
                 android:gravity="center"
                 android:textColor="@color/mainstart"

@@ -203,7 +203,9 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
                 }
             }, 2000) // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
         } else {
-            Toast.makeText(this, "正在清除呼叫转移，3s后退出请稍等。", Toast.LENGTH_LONG).show();
+            val callCancelDialog = CallCancelDialog(this)
+            callCancelDialog.setCancelable(false)
+            callCancelDialog.show("正在清除呼叫转移，3s后退出请稍等。")
             val phoneNum = AppCache.getPhoneNum(this)
             val hz = phoneNum!!.isHz
             if (hz) {
@@ -217,14 +219,17 @@ class SettingActivity : AppCompatActivity(), BottomNavigationBar.OnTabSelectedLi
 
             qmuiViewPager?.postDelayed(object :Runnable{
                 override fun run() {
+                    callCancelDialog.dismiss()
                     finish()
                 }
             },4000)
 
 
+
 //            System.exit(0);
         }
     }
+
 
 
 }
